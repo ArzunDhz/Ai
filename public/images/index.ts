@@ -9,6 +9,8 @@ import WaterImg from "./WaterDrop.jpg";
 import AstroImg from "./Astro.jpg";
 import SamImg from "./Sam.jpg";
 import CatImg from './cat.webp'
+import StabilityImg from './engine1.jpg'
+import DreamShaperImg from './engine2.jpg'
 export {
   ArjunImg,
   AninshImg,
@@ -20,5 +22,7 @@ export {
   WaterImg,
   AstroImg,
   SamImg,
-  CatImg
+  CatImg,
+  StabilityImg,
+  DreamShaperImg
 };
