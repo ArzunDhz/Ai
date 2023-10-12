@@ -9,13 +9,43 @@ import { Switch } from "@/components/ui/switch";
 import { useInput, useToggle } from "@/store/store";
 import { FlameIcon, Settings } from "lucide-react";
 import { useState } from "react";
-
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { getHeightnWidth } from "@/components/generate/GetSize";
+import axios, { AxiosResponse } from "axios";
 const Generate = () => {
+  const [textInputPrompt, setTextInputPrompt] = useState("");
+  const [textNegativeInputPrompt, setTextNegativeInputPrompt] = useState("");
   const [negativeToggle, setNegativeToggle] = useState(true);
   const toggle = useToggle((state) => state.showToggle);
   const switchMobileToggle = useToggle((state) => state.switchToggle);
   const inputDiamention = useInput((state) => state.inputDiamention);
   const outputNumber = useInput((state) => state.inputOutputNo);
+  const Engine = useInput((state) => state.engineModel);
+
+  //getting session
+  const { data: session } = useSession();
+  if (!session) return redirect("/login");
+  //generate iamge form the api
+
+  const generateImageFromApi = async () => {
+    if (textInputPrompt.length <= 0) return alert("Empty Field");
+    const diamention = getHeightnWidth(inputDiamention);
+    const objdata = {
+      prompt: textInputPrompt,
+      engineModel: Engine,
+      email: session.user?.email,
+      height: diamention?.height,
+      width: diamention?.width,
+    };
+
+    const { data }: any = await axios.post(
+      "http://localhost:8000/api/generate",
+      objdata
+    );
+    console.log(data);
+  };
+
   return (
     <>
       <section className="flex ">
@@ -31,9 +61,14 @@ const Generate = () => {
             <Input
               type="text"
               className=""
+              value={textInputPrompt}
+              onChange={(e) => setTextInputPrompt(e.target.value)}
               placeholder="Enter your prompt..."
             />
-            <Button className="px-4 rounded-sm bg-gradient-to-bl  from-[#D750A6] via-[#A057F6] to-[#6E7AFB] ">
+            <Button
+              onClick={() => generateImageFromApi()}
+              className="px-4 rounded-sm bg-gradient-to-bl  from-[#D750A6] via-[#A057F6] to-[#6E7AFB] "
+            >
               Generate
               <FlameIcon className="ml-3 fill-white stroke-white" />
             </Button>
@@ -56,6 +91,8 @@ const Generate = () => {
               className=" w-[1090px] max-2xl:w-[700px] max-xl:w-[600px]  max-lg:w-fit"
               placeholder="Enter Negative Prompt..."
               disabled={negativeToggle}
+              value={textNegativeInputPrompt}
+              onChange={(e) => setTextNegativeInputPrompt(e.target.value)}
             />
             <Settings
               onClick={() => switchMobileToggle()}
@@ -64,7 +101,7 @@ const Generate = () => {
           </div>
 
           {/* image section */}
-          <div className="flex justify-center mt-8 h-[500px] max-lg:w-[320px]  max-lg:h-[320px] ">
+          <div className="flex justify-center mt-8 h-[450px] max-lg:w-[320px]  max-lg:h-[320px] ">
             <div className="flex flex-col items-center justify-center h-full w-[500px] space-y-5 border-2  border-opacity-40 rounded-sm  border-slate-400 ">
               <svg
                 className="w-10 h-10 text-gray-200 dark:text-gray-600"

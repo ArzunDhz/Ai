@@ -59,10 +59,12 @@ export function DropdownMenuCheckboxes() {
         <DropdownMenuContent className="w-56 mr-5 cursor-pointer">
           <DropdownMenuLabel>Guest Mode</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuCheckboxItem className="cursor-pointer ">
-            <LogIn className="w-4 " />
-            <Link href={"/login"}>Login</Link>
-          </DropdownMenuCheckboxItem>
+          <Link href={"/login"}>
+            <DropdownMenuCheckboxItem className="cursor-pointer ">
+              <LogIn className="w-4 " />
+              <h1>Login</h1>
+            </DropdownMenuCheckboxItem>
+          </Link>
         </DropdownMenuContent>
       )}
     </DropdownMenu>

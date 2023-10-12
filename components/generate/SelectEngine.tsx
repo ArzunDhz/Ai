@@ -17,6 +17,7 @@ import {
   ArrowDownCircleIcon,
   ChevronDown,
 } from "lucide-react";
+import { useInput } from "@/store/store";
 
 type Engine = {
   [key: string]: {
@@ -41,9 +42,11 @@ const EngineObject: Engine = {
 
 export function SelectEngine() {
   const [selectedModel, setSelectedModel] = useState<string>("engine1");
+  const switchEngine = useInput((state) => state.switchEngine);
 
   const handleMenuItemClick = (model: string) => {
     setSelectedModel(model);
+    switchEngine(EngineObject[model].api);
   };
 
   return (
